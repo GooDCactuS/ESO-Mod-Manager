@@ -9,16 +9,9 @@ namespace Engine.Utils
         {
             var addon = new Addon(title);
             addon.DependsOn = GetDependsOn(txt);
+            addon.IsLibrary = IsLibrary(txt);
 
             return addon;
-        }
-
-        private static string GetTitle(string txt)
-        {
-            var titleStart = txt.IndexOf("## Title:") + 9;
-            var titleEnd = txt.Substring(titleStart).IndexOf("\n");
-            var title = txt.Substring(titleStart, titleEnd).Trim();
-            return title;
         }
 
         private static List<string> GetDependsOn(string txt)
@@ -76,6 +69,25 @@ namespace Engine.Utils
             }
 
             return addons;
+        }
+
+        private static bool IsLibrary(string txt)
+        {
+            var isLibraryStart = txt.IndexOf("## IsLibrary:");
+            if (isLibraryStart == -1)
+            {
+                return false;
+            }
+
+            isLibraryStart += 13;
+            var isLibraryEnd = txt.Substring(isLibraryStart).IndexOf("\n");
+            var isLibraryString = txt.Substring(isLibraryStart, isLibraryEnd).Trim();
+            if (bool.TryParse(isLibraryString, out var result))
+            {
+                return result;
+            }
+
+            return false;
         }
     }
 }
