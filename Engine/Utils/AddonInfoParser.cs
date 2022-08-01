@@ -11,6 +11,7 @@ namespace Engine.Utils
             addon.DependsOn = GetDependsOn(txt);
             addon.IsLibrary = IsLibrary(txt);
             addon.Description = GetDescription(txt);
+            addon.Version = GetVersion(txt);
 
             return addon;
         }
@@ -104,6 +105,22 @@ namespace Engine.Utils
             var description = txt.Substring(descriptionStart, descriptionEnd).Trim();
 
             return description;
+        }
+
+        private static string GetVersion(string txt)
+        {
+            var name = "## Version:";
+            var versionStart = txt.IndexOf(name);
+            if (versionStart == -1)
+            {
+                return string.Empty;
+            }
+
+            versionStart += name.Length;
+            var versionEnd = txt.Substring(versionStart).IndexOf("\n");
+            var version = txt.Substring(versionStart, versionEnd).Trim();
+
+            return version;
         }
     }
 }
