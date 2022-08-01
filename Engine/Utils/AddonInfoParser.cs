@@ -10,6 +10,7 @@ namespace Engine.Utils
             var addon = new Addon(title);
             addon.DependsOn = GetDependsOn(txt);
             addon.IsLibrary = IsLibrary(txt);
+            addon.Description = GetDescription(txt);
 
             return addon;
         }
@@ -88,6 +89,21 @@ namespace Engine.Utils
             }
 
             return false;
+        }
+
+        private static string GetDescription(string txt)
+        {
+            var descriptionStart = txt.IndexOf("## Description:");
+            if (descriptionStart == -1)
+            {
+                return string.Empty;
+            }
+
+            descriptionStart += 15;
+            var descriptionEnd = txt.Substring(descriptionStart).IndexOf("\n");
+            var description = txt.Substring(descriptionStart, descriptionEnd).Trim();
+
+            return description;
         }
     }
 }
