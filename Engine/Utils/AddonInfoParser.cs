@@ -29,18 +29,10 @@ namespace Engine.Utils
         private static List<string> GetRequiredDependsOn(string txt)
         {
             var addons = new List<string>();
+            var name = "## DependsOn:";
 
-            var dependsOnStart = txt.IndexOf("## DependsOn:");
-            if (dependsOnStart == -1)
-            {
-                return addons;
-            }
-
-            dependsOnStart += + 13;
-            var dependsOnEnd = txt.Substring(dependsOnStart).IndexOf("\n");
-            var dependsOnString = txt.Substring(dependsOnStart, dependsOnEnd).Trim();
+            var dependsOnString = GetSpecificString(txt, name);
             var dependsOnList = dependsOnString.Split(' ');
-
             foreach (var item in dependsOnList)
             {
                 var values = item.Split(">=");
@@ -53,16 +45,9 @@ namespace Engine.Utils
         private static List<string> GetOptionalDependsOn(string txt)
         {
             var addons = new List<string>();
+            var name = "## OptionalDependsOn:";
 
-            var dependsOnStart = txt.IndexOf("## OptionalDependsOn:");
-            if (dependsOnStart == -1)
-            {
-                return addons;
-            }
-
-            dependsOnStart += 21;
-            var dependsOnEnd = txt.Substring(dependsOnStart).IndexOf("\n");
-            var dependsOnString = txt.Substring(dependsOnStart, dependsOnEnd).Trim();
+            var dependsOnString = GetSpecificString(txt, name);
             var dependsOnList = dependsOnString.Split(' ');
             foreach (var item in dependsOnList)
             {
@@ -75,15 +60,8 @@ namespace Engine.Utils
 
         private static bool IsLibrary(string txt)
         {
-            var isLibraryStart = txt.IndexOf("## IsLibrary:");
-            if (isLibraryStart == -1)
-            {
-                return false;
-            }
-
-            isLibraryStart += 13;
-            var isLibraryEnd = txt.Substring(isLibraryStart).IndexOf("\n");
-            var isLibraryString = txt.Substring(isLibraryStart, isLibraryEnd).Trim();
+            var name = "## IsLibrary:";
+            var isLibraryString = GetSpecificString(txt, name);
             if (bool.TryParse(isLibraryString, out var result))
             {
                 return result;
@@ -94,15 +72,8 @@ namespace Engine.Utils
 
         private static string GetDescription(string txt)
         {
-            var descriptionStart = txt.IndexOf("## Description:");
-            if (descriptionStart == -1)
-            {
-                return string.Empty;
-            }
-
-            descriptionStart += 15;
-            var descriptionEnd = txt.Substring(descriptionStart).IndexOf("\n");
-            var description = txt.Substring(descriptionStart, descriptionEnd).Trim();
+            var name = "## Description:";
+            var description = GetSpecificString(txt, name);
 
             return description;
         }
@@ -110,17 +81,24 @@ namespace Engine.Utils
         private static string GetVersion(string txt)
         {
             var name = "## Version:";
-            var versionStart = txt.IndexOf(name);
-            if (versionStart == -1)
+            var version = GetSpecificString(txt, name);
+
+            return version;
+        }
+
+        private static string GetSpecificString(string txt, string stringName)
+        {
+            var stringStart = txt.IndexOf(stringName);
+            if (stringStart == -1)
             {
                 return string.Empty;
             }
 
-            versionStart += name.Length;
-            var versionEnd = txt.Substring(versionStart).IndexOf("\n");
-            var version = txt.Substring(versionStart, versionEnd).Trim();
+            stringStart += stringName.Length;
+            var stringEnd = txt.Substring(stringStart).IndexOf("\n");
+            var specificString = txt.Substring(stringStart, stringEnd).Trim();
 
-            return version;
+            return specificString;
         }
     }
 }
