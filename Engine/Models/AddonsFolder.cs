@@ -31,5 +31,7 @@ namespace Engine.Models
             var folder = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\\Elder Scrolls Online\\live\\AddOns";
             return folder;
         }
+
+        public override string ToString() => Path;
     }
 }

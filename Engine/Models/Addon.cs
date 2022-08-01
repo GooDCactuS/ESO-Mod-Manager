@@ -20,5 +20,7 @@ namespace Engine.Models
             Name = name;
             DependsOn = new List<string>();
         }
+
+        public override string ToString() => Name;
     }
 }
